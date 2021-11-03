@@ -526,24 +526,24 @@ local function solve_globals(all)
 					invalid = true
 					break
 				end
-					local mod = _LOADED[name]
+				local mod = _LOADED[name]
+				if mod == nil then
+					invalid = true
+					break
+				end
+				for w in string.gmatch(path:sub(to+1), "[_%a]%w*") do
 					if mod == nil then
 						invalid = true
 						break
 					end
-					for w in string.gmatch(path:sub(to+1), "[_%a]%w*") do
-						if mod == nil then
-							invalid = true
-							break
-						end
-						mod=mod[w]
-					end
-					local mt = getmetatable(mod)
-					if mt == "MODULE" then
-					else
-						unsolved = true
-						value = mod
-					end
+					mod=mod[w]
+				end
+				local mt = getmetatable(mod)
+				if mt == "MODULE" then
+					unsolved = true
+				else
+					value = mod
+				end
 			end
 			if invalid then
 				if print then print("GLOBAL INVALID", path) end
